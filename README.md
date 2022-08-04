@@ -10,7 +10,7 @@ Our **Discord** Bot was developed in ~~discord.py~~ **Hikari** and Hikari-Lightb
 
 ![Screenshot from 2022-08-04 10-49-37](https://user-images.githubusercontent.com/67679722/182822066-29116eab-6ffb-4bb0-9a5d-8057fcb1c048.png)
 
-Used Beautiful soup to scrape the articles and made my bot post them as discord embeds.
+Used Beautiful soup to scrape the articles from shopify's blog and made my bot post them as discord embeds.
 
 ## Basic Functionality 
 
