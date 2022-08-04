@@ -5,8 +5,9 @@ import lightbulb
 from scraping import articles, base_url
 
 embed_thumbail_link = "https://i.pinimg.com/originals/da/d3/c0/dad3c0f67dd0118a5fdd9abdaf0fc05e.png";
-mods = [ 662074152806645783 ]
-bot = lightbulb.BotApp(token="NjkzMTc5MzM2OTI0MzMyMTgy.GDR-eJ.QmeWv4nUb_bgQevGX4dcmI3aYq2kGpsIwRuSTY")
+
+mods = [ 662074152806645783 ] # ADD YOUR USER_ID
+bot = lightbulb.BotApp(token="INSERT YOUR TOKEN")
 
 @bot.listen(hikari.StartedEvent)
 async def on_started(event):
