@@ -4,10 +4,9 @@ import hikari
 import lightbulb
 from scraping import articles, base_url
 
-embed_thumbail_link = "https://comicvine.gamespot.com/a/uploads/original/11141/111416458/7392637-8009724742-7310212-4422353572-latest";
-
-token = str(os.getenv("DISCORD_TOKEN"))
-bot = lightbulb.BotApp(token="NjkzMTc5MzM2OTI0MzMyMTgy.G2LpIF.hr6mqax_aRo0zgmPd-eoH089iN6a2uh4Hcw5gs")
+embed_thumbail_link = "https://i.pinimg.com/originals/da/d3/c0/dad3c0f67dd0118a5fdd9abdaf0fc05e.png";
+mods = [ 662074152806645783 ] # ADD YOUR USER_ID
+bot = lightbulb.BotApp(token="INSERT YOUR TOKEN")
 
 @bot.listen(hikari.StartedEvent)
 async def on_started(event):
@@ -82,12 +81,38 @@ async def send_articles(ctx: lightbulb.Context):
 async def echo(ctx: lightbulb.Context) -> None:
     await ctx.respond(ctx.options.text)
 
+@lightbulb.Check
+def check_author_is_mod(ctx: lightbulb.Context) -> bool:
+    return ctx.author.id in mods
 
 @bot.command
-@lightbulb.command("clear", "Clears the Chat")
+@lightbulb.add_checks(check_author_is_mod)
+@lightbulb.option("reason", "Reason for the kick", required=False)
+@lightbulb.option("user", "User to kick", type=hikari.User)
+@lightbulb.command("kick", "Kick a user from the server")
 @lightbulb.implements(lightbulb.SlashCommand)
-async def clear_chat(ctx):
-    pass
+async def kick_user(ctx: lightbulb.SlashContext) -> None:
+    if not ctx.guild_id:
+        await ctx.respond("This command can only be used in a server.")
+        return
+    
+    if ctx.options.user.id in mods:
+        await ctx.respond("You can't kick a moderator!")
+        return
+
+    await ctx.app.rest.kick_user(ctx.guild_id, ctx.options.user.id)
+    await ctx.respond(f"{ctx.options.user.mention} has been kicked from the server by {ctx.author}\n**Reason:** {ctx.options.reason or 'No reason provided'}.")
+
+@bot.command
+@lightbulb.command("clear", "Clears the whole channel history")
+@lightbulb.implements(lightbulb.SlashCommand)
+async def clear_chat(ctx: lightbulb.SlashContext) -> None:
+    messages = ( 
+        await bot.rest.fetch_messages(ctx.channel_id)
+    )
+
+    await bot.rest.delete_messages(ctx.channel_id, messages)
+    await ctx.respond(f"{ctx.author} cleared ({ctx.channel_id}) chats")
 
            
 bot.run();
